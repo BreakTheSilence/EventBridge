@@ -6,6 +6,72 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/EventParticipants/new-participant": {
+      "post": {
+        "tags": [
+          "EventParticipants"
+        ],
+        "operationId": "CreateEventParticipantFromNewParticipant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventNewParticipantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/EventParticipants/existing-participant": {
+      "post": {
+        "tags": [
+          "EventParticipants"
+        ],
+        "operationId": "CreateEventParticipantFromExistingParticipant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventExisingParticipantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Events": {
       "post": {
         "tags": [
@@ -396,6 +462,74 @@
   },
   "components": {
     "schemas": {
+      "CreateEventNewParticipantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participantType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "idCode": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "paymentMethod": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participationCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreateEventExisingParticipantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participantId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paymentMethod": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participationCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "AddEventCommand": {
         "type": "object",
         "additionalProperties": false,

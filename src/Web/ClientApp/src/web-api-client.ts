@@ -10,6 +10,97 @@
 
 import followIfLoginRedirect from './components/api-authorization/followIfLoginRedirect';
 
+export class EventParticipantsClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    createEventParticipantFromNewParticipant(command: CreateEventNewParticipantCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/EventParticipants/new-participant";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateEventParticipantFromNewParticipant(_response);
+        });
+    }
+
+    protected processCreateEventParticipantFromNewParticipant(response: Response): Promise<number> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    createEventParticipantFromExistingParticipant(command: CreateEventExisingParticipantCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/EventParticipants/existing-participant";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateEventParticipantFromExistingParticipant(_response);
+        });
+    }
+
+    protected processCreateEventParticipantFromExistingParticipant(response: Response): Promise<number> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+}
+
 export class EventsClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -521,6 +612,126 @@ export class WeatherForecastsClient {
         }
         return Promise.resolve<WeatherForecast[]>(null as any);
     }
+}
+
+export class CreateEventNewParticipantCommand implements ICreateEventNewParticipantCommand {
+    eventId?: number;
+    participantType?: number;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    name?: string | undefined;
+    idCode?: number;
+    paymentMethod?: number;
+    participationCount?: number;
+    additionalInfo?: string | undefined;
+
+    constructor(data?: ICreateEventNewParticipantCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.eventId = _data["eventId"];
+            this.participantType = _data["participantType"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.name = _data["name"];
+            this.idCode = _data["idCode"];
+            this.paymentMethod = _data["paymentMethod"];
+            this.participationCount = _data["participationCount"];
+            this.additionalInfo = _data["additionalInfo"];
+        }
+    }
+
+    static fromJS(data: any): CreateEventNewParticipantCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateEventNewParticipantCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["eventId"] = this.eventId;
+        data["participantType"] = this.participantType;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["name"] = this.name;
+        data["idCode"] = this.idCode;
+        data["paymentMethod"] = this.paymentMethod;
+        data["participationCount"] = this.participationCount;
+        data["additionalInfo"] = this.additionalInfo;
+        return data;
+    }
+}
+
+export interface ICreateEventNewParticipantCommand {
+    eventId?: number;
+    participantType?: number;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    name?: string | undefined;
+    idCode?: number;
+    paymentMethod?: number;
+    participationCount?: number;
+    additionalInfo?: string | undefined;
+}
+
+export class CreateEventExisingParticipantCommand implements ICreateEventExisingParticipantCommand {
+    eventId?: number;
+    participantId?: number;
+    paymentMethod?: number;
+    participationCount?: number;
+    additionalInfo?: string | undefined;
+
+    constructor(data?: ICreateEventExisingParticipantCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.eventId = _data["eventId"];
+            this.participantId = _data["participantId"];
+            this.paymentMethod = _data["paymentMethod"];
+            this.participationCount = _data["participationCount"];
+            this.additionalInfo = _data["additionalInfo"];
+        }
+    }
+
+    static fromJS(data: any): CreateEventExisingParticipantCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateEventExisingParticipantCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["eventId"] = this.eventId;
+        data["participantId"] = this.participantId;
+        data["paymentMethod"] = this.paymentMethod;
+        data["participationCount"] = this.participationCount;
+        data["additionalInfo"] = this.additionalInfo;
+        return data;
+    }
+}
+
+export interface ICreateEventExisingParticipantCommand {
+    eventId?: number;
+    participantId?: number;
+    paymentMethod?: number;
+    participationCount?: number;
+    additionalInfo?: string | undefined;
 }
 
 export class AddEventCommand implements IAddEventCommand {
