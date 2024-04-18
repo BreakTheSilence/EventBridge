@@ -6,10 +6,6 @@ function Home() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  
-  function goToCreateEvent() {
-    navigate('/create-event')
-  }
 
 
   useEffect(() => {
@@ -28,6 +24,10 @@ function Home() {
     const updatedEvents = events.filter(event => event.id !== eventId);
     setEvents(updatedEvents);
   };
+  
+  const handleOpenDetails = async (eventId) => {
+    navigate(`/event-details/${eventId}`)
+  };
 
   const renderEventsTable = (events) => (
     <div>
@@ -37,7 +37,8 @@ function Home() {
           <th>Id</th>
           <th>Name</th>
           <th>Date</th>
-          <th>Actions</th> {/* New column for delete buttons */}
+          <th></th> {}
+          <th></th> {}
         </tr>
         </thead>
         <tbody>
@@ -46,6 +47,9 @@ function Home() {
             <td>{event.id}</td>
             <td>{event.name}</td>
             <td>{event.date.toLocaleDateString()}</td>
+            <td>
+              <button onClick={() => handleOpenDetails(event.id)}>Participants</button>
+            </td>
             <td>
               <button onClick={() => handleDeleteEvent(event.id)}>Delete</button>
             </td>
@@ -64,7 +68,6 @@ function Home() {
     <div>
       <h1 id="tableLabel">Events</h1>
       <p>All events list.</p>
-      <button onClick={goToCreateEvent}>Create Event</button>
       {contents}
     </div>
   );

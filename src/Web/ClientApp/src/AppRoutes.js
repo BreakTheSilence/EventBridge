@@ -1,7 +1,6 @@
-import { Counter } from "./components/Counter";
-import FetchData from "./components/FetchData";
 import  Home  from "./components/Home";
 import  CreateEvent  from "./components/Events/CreateEvent";
+import  EventDetails  from "./components/Events/EventDetails";
 
 const AppRoutes = [
   {
@@ -9,16 +8,12 @@ const AppRoutes = [
     element: <Home />
   },
   {
-    path: '/counter',
-    element: <Counter />
-  },
-  {
-    path: '/fetch-data',
-    element: <FetchData />
-  },
-  {
     path: '/create-event',
     element: <CreateEvent />
+  },
+  {
+    path: '/event-details/:eventId',
+    element: <EventDetails />
   }
 ];
 
