@@ -45,7 +45,7 @@ public class CreateEventNewParticipantCommandHandler : IRequestHandler<CreateEve
             EventId = request.EventId,
             ParticipantId = participant.Id,
             PaymentMethod = (PaymentMethod)request.PaymentMethod,
-            ParticipantsCount = request.ParticipationCount,
+            ParticipantsCount = participant.Type == ParticipantType.Company ? request.ParticipationCount : 1,
             AdditionalInfo = request.AdditionalInfo
         };
         

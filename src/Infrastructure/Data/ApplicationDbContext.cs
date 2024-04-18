@@ -34,5 +34,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
             .HasOne(ep => ep.Participant)
             .WithMany(p => p.EventParticipants)
             .HasForeignKey(ep => ep.ParticipantId);
+        
+        builder.Entity<EventParticipant>().Ignore(ep => ep.Id);
     }
 }

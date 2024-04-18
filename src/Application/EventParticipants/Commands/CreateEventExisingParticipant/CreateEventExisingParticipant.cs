@@ -38,7 +38,9 @@ public class CreateEventExisingParticipantCommandHandler : IRequestHandler<Creat
             return check.Id; // Check if this combination already exists
         }
 
-        if (!await _context.Participants.AnyAsync(p => p.Id.Equals(request.ParticipantId), cancellationToken) 
+        var participant = await _context.Participants.FindAsync(request.ParticipantId , cancellationToken);
+
+        if (participant == null 
             || !await _context.Events.AnyAsync(e => e.Id.Equals(request.EventId), cancellationToken))
         {
             return -1;
@@ -49,7 +51,7 @@ public class CreateEventExisingParticipantCommandHandler : IRequestHandler<Creat
             EventId = request.EventId,
             ParticipantId = request.ParticipantId,
             PaymentMethod = (PaymentMethod)request.PaymentMethod,
-            ParticipantsCount = request.ParticipationCount,
+            ParticipantsCount = participant.Type == ParticipantType.Company ? request.ParticipationCount : 1,
             AdditionalInfo = request.AdditionalInfo
         };
         

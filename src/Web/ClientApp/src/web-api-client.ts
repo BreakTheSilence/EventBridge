@@ -136,6 +136,47 @@ export class EventParticipantsClient {
         }
         return Promise.resolve<void>(null as any);
     }
+
+    updateEventParticipant(eventId: number, participantId: number, command: ModifyEventParticipantCommand): Promise<void> {
+        let url_ = this.baseUrl + "/api/EventParticipants/{eventId}/{participantId}";
+        if (eventId === undefined || eventId === null)
+            throw new Error("The parameter 'eventId' must be defined.");
+        url_ = url_.replace("{eventId}", encodeURIComponent("" + eventId));
+        if (participantId === undefined || participantId === null)
+            throw new Error("The parameter 'participantId' must be defined.");
+        url_ = url_.replace("{participantId}", encodeURIComponent("" + participantId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateEventParticipant(_response);
+        });
+    }
+
+    protected processUpdateEventParticipant(response: Response): Promise<void> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
 }
 
 export class EventsClient {
@@ -229,6 +270,93 @@ export class EventsClient {
             });
         }
         return Promise.resolve<PaginatedListOfEventDto>(null as any);
+    }
+}
+
+export class ParticipantsClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getParticipantById(id: number): Promise<ParticipantDto> {
+        let url_ = this.baseUrl + "/api/Participants/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetParticipantById(_response);
+        });
+    }
+
+    protected processGetParticipantById(response: Response): Promise<ParticipantDto> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ParticipantDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ParticipantDto>(null as any);
+    }
+
+    updateParticipant(id: number, command: ModifyParticipantCommand): Promise<void> {
+        let url_ = this.baseUrl + "/api/Participants/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateParticipant(_response);
+        });
+    }
+
+    protected processUpdateParticipant(response: Response): Promise<void> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
     }
 }
 
@@ -771,6 +899,58 @@ export interface ICreateEventExisingParticipantCommand {
     additionalInfo?: string | undefined;
 }
 
+export class ModifyEventParticipantCommand implements IModifyEventParticipantCommand {
+    eventId?: number;
+    participantId?: number;
+    paymentMethod?: number;
+    participantsCount?: number;
+    additionalInfo?: string | undefined;
+
+    constructor(data?: IModifyEventParticipantCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.eventId = _data["eventId"];
+            this.participantId = _data["participantId"];
+            this.paymentMethod = _data["paymentMethod"];
+            this.participantsCount = _data["participantsCount"];
+            this.additionalInfo = _data["additionalInfo"];
+        }
+    }
+
+    static fromJS(data: any): ModifyEventParticipantCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ModifyEventParticipantCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["eventId"] = this.eventId;
+        data["participantId"] = this.participantId;
+        data["paymentMethod"] = this.paymentMethod;
+        data["participantsCount"] = this.participantsCount;
+        data["additionalInfo"] = this.additionalInfo;
+        return data;
+    }
+}
+
+export interface IModifyEventParticipantCommand {
+    eventId?: number;
+    participantId?: number;
+    paymentMethod?: number;
+    participantsCount?: number;
+    additionalInfo?: string | undefined;
+}
+
 export class AddEventCommand implements IAddEventCommand {
     name?: string;
     date?: Date;
@@ -933,6 +1113,114 @@ export interface IEventDto {
     date?: Date;
     location?: string;
     description?: string;
+}
+
+export class ParticipantDto implements IParticipantDto {
+    id?: number;
+    type?: number;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    name?: string | undefined;
+    idCode?: number;
+
+    constructor(data?: IParticipantDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.name = _data["name"];
+            this.idCode = _data["idCode"];
+        }
+    }
+
+    static fromJS(data: any): ParticipantDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ParticipantDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["name"] = this.name;
+        data["idCode"] = this.idCode;
+        return data;
+    }
+}
+
+export interface IParticipantDto {
+    id?: number;
+    type?: number;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    name?: string | undefined;
+    idCode?: number;
+}
+
+export class ModifyParticipantCommand implements IModifyParticipantCommand {
+    id?: number;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    name?: string | undefined;
+    idCode?: number;
+
+    constructor(data?: IModifyParticipantCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.name = _data["name"];
+            this.idCode = _data["idCode"];
+        }
+    }
+
+    static fromJS(data: any): ModifyParticipantCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ModifyParticipantCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["name"] = this.name;
+        data["idCode"] = this.idCode;
+        return data;
+    }
+}
+
+export interface IModifyParticipantCommand {
+    id?: number;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    name?: string | undefined;
+    idCode?: number;
 }
 
 export class PaginatedListOfTodoItemBriefDto implements IPaginatedListOfTodoItemBriefDto {
