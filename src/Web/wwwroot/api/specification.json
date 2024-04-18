@@ -72,6 +72,41 @@
         }
       }
     },
+    "/api/EventParticipants/{eventId}/{participantId}": {
+      "delete": {
+        "tags": [
+          "EventParticipants"
+        ],
+        "operationId": "DeleteEventParticipant",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/Events": {
       "post": {
         "tags": [
