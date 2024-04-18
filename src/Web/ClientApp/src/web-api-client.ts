@@ -271,6 +271,44 @@ export class EventsClient {
         }
         return Promise.resolve<PaginatedListOfEventDto>(null as any);
     }
+
+    getEventWithParticipants(id: number): Promise<EventWithParticipantsDto> {
+        let url_ = this.baseUrl + "/api/Events/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetEventWithParticipants(_response);
+        });
+    }
+
+    protected processGetEventWithParticipants(response: Response): Promise<EventWithParticipantsDto> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventWithParticipantsDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<EventWithParticipantsDto>(null as any);
+    }
 }
 
 export class ParticipantsClient {
@@ -283,7 +321,7 @@ export class ParticipantsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getParticipantById(id: number): Promise<ParticipantDto> {
+    getParticipantById(id: number): Promise<ParticipantDto2> {
         let url_ = this.baseUrl + "/api/Participants/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -302,7 +340,7 @@ export class ParticipantsClient {
         });
     }
 
-    protected processGetParticipantById(response: Response): Promise<ParticipantDto> {
+    protected processGetParticipantById(response: Response): Promise<ParticipantDto2> {
         followIfLoginRedirect(response);
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
@@ -310,7 +348,7 @@ export class ParticipantsClient {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ParticipantDto.fromJS(resultData200);
+            result200 = ParticipantDto2.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -318,7 +356,7 @@ export class ParticipantsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<ParticipantDto>(null as any);
+        return Promise.resolve<ParticipantDto2>(null as any);
     }
 
     updateParticipant(id: number, command: ModifyParticipantCommand): Promise<void> {
@@ -1067,8 +1105,6 @@ export class EventDto implements IEventDto {
     id?: number;
     name?: string;
     date?: Date;
-    location?: string;
-    description?: string;
 
     constructor(data?: IEventDto) {
         if (data) {
@@ -1084,8 +1120,6 @@ export class EventDto implements IEventDto {
             this.id = _data["id"];
             this.name = _data["name"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.location = _data["location"];
-            this.description = _data["description"];
         }
     }
 
@@ -1101,8 +1135,6 @@ export class EventDto implements IEventDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["location"] = this.location;
-        data["description"] = this.description;
         return data;
     }
 }
@@ -1111,8 +1143,66 @@ export interface IEventDto {
     id?: number;
     name?: string;
     date?: Date;
-    location?: string;
-    description?: string;
+}
+
+export class EventWithParticipantsDto implements IEventWithParticipantsDto {
+    id?: number;
+    date?: Date;
+    location?: string | undefined;
+    description?: string | undefined;
+    eventParticipants?: ParticipantDto[];
+
+    constructor(data?: IEventWithParticipantsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.location = _data["location"];
+            this.description = _data["description"];
+            if (Array.isArray(_data["eventParticipants"])) {
+                this.eventParticipants = [] as any;
+                for (let item of _data["eventParticipants"])
+                    this.eventParticipants!.push(ParticipantDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): EventWithParticipantsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventWithParticipantsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["location"] = this.location;
+        data["description"] = this.description;
+        if (Array.isArray(this.eventParticipants)) {
+            data["eventParticipants"] = [];
+            for (let item of this.eventParticipants)
+                data["eventParticipants"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IEventWithParticipantsDto {
+    id?: number;
+    date?: Date;
+    location?: string | undefined;
+    description?: string | undefined;
+    eventParticipants?: ParticipantDto[];
 }
 
 export class ParticipantDto implements IParticipantDto {
@@ -1163,6 +1253,62 @@ export class ParticipantDto implements IParticipantDto {
 }
 
 export interface IParticipantDto {
+    id?: number;
+    type?: number;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    name?: string | undefined;
+    idCode?: number;
+}
+
+export class ParticipantDto2 implements IParticipantDto2 {
+    id?: number;
+    type?: number;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    name?: string | undefined;
+    idCode?: number;
+
+    constructor(data?: IParticipantDto2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.name = _data["name"];
+            this.idCode = _data["idCode"];
+        }
+    }
+
+    static fromJS(data: any): ParticipantDto2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new ParticipantDto2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["name"] = this.name;
+        data["idCode"] = this.idCode;
+        return data;
+    }
+}
+
+export interface IParticipantDto2 {
     id?: number;
     type?: number;
     firstName?: string | undefined;

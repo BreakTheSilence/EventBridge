@@ -55,7 +55,7 @@ public class CreateEventNewParticipantCommandHandler : IRequestHandler<CreateEve
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return eventParticipant.Id;
+        return 200;
     }
 
     private async Task<Participant> SaveParticipant(CreateEventNewParticipantCommand request, CancellationToken cancellationToken)

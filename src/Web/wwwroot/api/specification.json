@@ -225,6 +225,38 @@
         }
       }
     },
+    "/api/Events/{id}": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "operationId": "GetEventWithParticipants",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventWithParticipantsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Participants/{id}": {
       "get": {
         "tags": [
@@ -249,7 +281,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParticipantDto"
+                  "$ref": "#/components/schemas/ParticipantDto2"
                 }
               }
             }
@@ -766,16 +798,68 @@
           "date": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "EventWithParticipantsDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
           },
           "location": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
+          },
+          "eventParticipants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantDto"
+            }
           }
         }
       },
       "ParticipantDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "idCode": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ParticipantDto2": {
         "type": "object",
         "additionalProperties": false,
         "properties": {

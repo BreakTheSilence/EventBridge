@@ -61,6 +61,6 @@ public class CreateEventExisingParticipantCommandHandler : IRequestHandler<Creat
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return eventParticipant.Id;
+        return 200;
     }
 }
