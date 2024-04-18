@@ -1,5 +1,6 @@
 ﻿using EventBridge.Application.Common.Models;
 using EventBridge.Application.Events.Commands.AddEvent;
+using EventBridge.Application.Events.Commands.DeleteEvent;
 using EventBridge.Application.Events.Queries.GetEvents;
 using EventBridge.Application.Events.Queries.GetEventWithParticipants;
 
@@ -13,7 +14,8 @@ public class Events : EndpointGroupBase
             .RequireAuthorization()
             .MapPost(CreateEvent)
             .MapGet(GetEventsWithPagination)
-            .MapGet(GetEventWithParticipants, "{id}");
+            .MapGet(GetEventWithParticipants, "{id}")
+            .MapDelete(DeleteEvent, "{id}");
     }
 
     public Task<int> CreateEvent(ISender sender, AddEventCommand command)
@@ -30,5 +32,11 @@ public class Events : EndpointGroupBase
     public Task<EventWithParticipantsDto> GetEventWithParticipants(ISender sender, int id)
     {
         return sender.Send(new GetEventWithParticipantsQuery(id));
+    }
+    
+    public async Task<IResult> DeleteEvent(ISender sender, int id)
+    {
+        await sender.Send(new DeleteEventCommand(id));
+        return Results.NoContent();
     }
 }

@@ -28,7 +28,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         builder.Entity<EventParticipant>()
             .HasOne(ep => ep.Event)
             .WithMany(e => e.EventParticipants)
-            .HasForeignKey(ep => ep.EventId);
+            .HasForeignKey(ep => ep.EventId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<EventParticipant>()
             .HasOne(ep => ep.Participant)

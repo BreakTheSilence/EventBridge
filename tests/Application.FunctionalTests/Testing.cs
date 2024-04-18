@@ -11,7 +11,7 @@ namespace EventBridge.Application.FunctionalTests;
 [SetUpFixture]
 public partial class Testing
 {
-    private static ITestDatabase _database;
+    private static ITestDatabase? _database;
     private static CustomWebApplicationFactory _factory = null!;
     private static IServiceScopeFactory _scopeFactory = null!;
     private static string? _userId;
@@ -97,6 +97,7 @@ public partial class Testing
     {
         try
         {
+            if (_database is null) return;
             await _database.ResetAsync();
         }
         catch (Exception) 
@@ -140,6 +141,7 @@ public partial class Testing
     [OneTimeTearDown]
     public async Task RunAfterAnyTests()
     {
+        if (_database is null) return;
         await _database.DisposeAsync();
         await _factory.DisposeAsync();
     }
