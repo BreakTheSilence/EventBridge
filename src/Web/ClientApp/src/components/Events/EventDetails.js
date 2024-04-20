@@ -2,9 +2,10 @@
 import { useParams } from 'react-router-dom';
 import { EventsClient } from '../../web-api-client.ts';
 import ParticipantsList from '../Participants/ParticipantsList';
+import NewParticipantForm from '../EventParticipants/NewParticipantForm';
 
 function EventDetails() {
-  const { eventId } = useParams();  // Получение ID события из URL
+  const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,6 +45,7 @@ function EventDetails() {
           <p>Location: {event.location}</p>
           <p>Description: {event.description}</p>
           <ParticipantsList participants={event.eventParticipants} eventId={event.id}></ParticipantsList>
+          <NewParticipantForm eventId={event.id}></NewParticipantForm>
         </div>
       ) : (
         <p>Event not found</p>
