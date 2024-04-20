@@ -1,12 +1,15 @@
 ﻿import React, { useState } from 'react';
 import {EventParticipantsClient} from "../../web-api-client.ts";
+import {useNavigate} from "react-router-dom";
 
 function ParticipantsList({ participants, eventId }) {
+  const navigate = useNavigate();
   const [participantsList, setParticipants] = useState(participants);
 
 
   function handleEdit(participantId) {
     console.log(`Edit participant with ID: ${participantId}`);
+    navigate(`/participant-details/${eventId}/${participantId}`)
   }
 
   const handleDelete = async (participantId, eventId) => {

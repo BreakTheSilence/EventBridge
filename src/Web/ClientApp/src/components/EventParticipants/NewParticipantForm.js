@@ -11,7 +11,6 @@ function NewParticipantForm({eventId}) {
     lastName: '',
     idCode: '',
     companyName: '',
-    registerCode: '',
     participantsCount: '',
     paymentMethod: 0,
     additionalInfo: ''
@@ -42,9 +41,11 @@ function NewParticipantForm({eventId}) {
       lastName: isCompany ? undefined : formData.lastName,
       name: isCompany ? formData.companyName : undefined,
       idCode: formData.idCode,
+      participationCount: isCompany ? formData.participantsCount : 1,
       paymentMethod: formData.paymentMethod,
       additionalInfo: formData.additionalInfo
     };
+    console.log(newEventParticipant);
     let client = new EventParticipantsClient();
     await client.createEventParticipantFromNewParticipant(newEventParticipant)
     navigate(0)
@@ -78,11 +79,11 @@ function NewParticipantForm({eventId}) {
               />
             </label>
             <label>
-              Registrekood:
+              Reg. code:
               <input
                 type="text"
-                name="registrekood"
-                value={formData.registrekood}
+                name="idCode"
+                value={formData.idCode}
                 onChange={handleChange}
                 required
               />

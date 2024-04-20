@@ -2,6 +2,7 @@
 using EventBridge.Application.EventParticipants.Commands.CreateEventNewParticipant;
 using EventBridge.Application.EventParticipants.Commands.DeleteEventParticipant;
 using EventBridge.Application.EventParticipants.Commands.ModifyEventParticipant;
+using EventBridge.Application.EventParticipants.Queries.GetEventParticipant;
 
 namespace EventBridge.Web.Endpoints;
 
@@ -11,10 +12,16 @@ public class EventParticipants : EndpointGroupBase
     {
         app.MapGroup(this)
             .RequireAuthorization()
+            .MapGet(GetEventParticipant, "{eventId:int}/{participantId:int}")
             .MapPost(CreateEventParticipantFromNewParticipant, "new-participant")
             .MapPost(CreateEventParticipantFromExistingParticipant, "existing-participant")
             .MapDelete(DeleteEventParticipant, "{eventId:int}/{participantId:int}")
             .MapPut(UpdateEventParticipant, "{eventId:int}/{participantId:int}");
+    }
+
+    public Task<EventParticipantDto> GetEventParticipant(ISender sender, int eventId, int participantId)
+    {
+        return sender.Send(new GetEventParticipantQuery(eventId, participantId));
     }
 
     public Task<int> CreateEventParticipantFromNewParticipant(ISender sender, CreateEventNewParticipantCommand command)

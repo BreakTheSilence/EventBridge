@@ -1,5 +1,4 @@
 ﻿using EventBridge.Application.Common.Interfaces;
-using EventBridge.Domain.Entities;
 
 namespace EventBridge.Application.Participants.Queries.GetParticipant;
 

@@ -14,7 +14,6 @@ public record CreateEventNewParticipantCommand : IRequest<int>
     public string? LastName { get; set; }
     public string? Name { get; set; }
     public long IdCode { get; set; }
-    
     public int PaymentMethod { get; set; }
     public int ParticipationCount { get; set; }
     public string? AdditionalInfo { get; set; }

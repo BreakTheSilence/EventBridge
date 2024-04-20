@@ -6,73 +6,47 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/EventParticipants/new-participant": {
-      "post": {
-        "tags": [
-          "EventParticipants"
-        ],
-        "operationId": "CreateEventParticipantFromNewParticipant",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateEventNewParticipantCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/EventParticipants/existing-participant": {
-      "post": {
-        "tags": [
-          "EventParticipants"
-        ],
-        "operationId": "CreateEventParticipantFromExistingParticipant",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateEventExisingParticipantCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/EventParticipants/{eventId}/{participantId}": {
+      "get": {
+        "tags": [
+          "EventParticipants"
+        ],
+        "operationId": "GetEventParticipant",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventParticipantDto"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "tags": [
           "EventParticipants"
@@ -148,6 +122,72 @@
         "responses": {
           "200": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/api/EventParticipants/new-participant": {
+      "post": {
+        "tags": [
+          "EventParticipants"
+        ],
+        "operationId": "CreateEventParticipantFromNewParticipant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventNewParticipantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/EventParticipants/existing-participant": {
+      "post": {
+        "tags": [
+          "EventParticipants"
+        ],
+        "operationId": "CreateEventParticipantFromExistingParticipant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventExisingParticipantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
           }
         }
       }
@@ -304,7 +344,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParticipantDto2"
+                  "$ref": "#/components/schemas/ParticipantDto"
                 }
               }
             }
@@ -664,6 +704,65 @@
   },
   "components": {
     "schemas": {
+      "EventParticipantDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eventId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paymentMethod": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participant": {
+            "$ref": "#/components/schemas/ParticipantDto"
+          },
+          "participantsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ParticipantDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "idCode": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "CreateEventNewParticipantCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -847,38 +946,8 @@
           "eventParticipants": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ParticipantDto"
+              "$ref": "#/components/schemas/ParticipantDto2"
             }
-          }
-        }
-      },
-      "ParticipantDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "type": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "idCode": {
-            "type": "integer",
-            "format": "int64"
           }
         }
       },
