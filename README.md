@@ -1,6 +1,46 @@
-﻿# EventBridge
+﻿# Event Registration System
 
-The project was generated using the [Clean.Architecture.Solution.Template](https://github.com/jasontaylordev/EventBridge) version 8.0.5.
+This repository contains the source code for an event registration system, designed using domain-driven design principles and layered architecture. The system allows for management of future and past events, and registration and management of participants (both individuals and legal entities).
+
+Login:
+Email: administrator@localhost | 
+Password: Administrator1!
+
+![Database scheme](https://ibb.co/ssN9Wzd)
+
+## Architecture Overview
+The project is structured into four main layers, ensuring a clear separation of concerns and promoting maintainability and scalability:
+
+### Domain Layer
+Core: Contains the foundational elements such as entities, value objects, enumerations, and domain logic.
+
+Value Objects: Use of complex types such as AdAccount to handle parsing and validation centrally.
+
+Entities: Core entities include Event, Participant, and potentially User for system interactions.
+
+Exceptions: Custom exceptions like AdAccountInvalidException are used to handle domain-specific errors.
+
+### Application Layer
+
+CQRS: Separates read queries from write commands, simplifying system design and allowing for easy feature expansion.
+
+MediatR: Facilitates the handling of requests and decouples message sending from business logic.
+
+Validation: Uses Fluent Validation for flexible, powerful validation logic.
+
+Common: Shared resources such as logging and validation rules.
+
+### Infrastructure Layer
+
+Persistence: Utilizes Entity Framework Core, with DbContext serving as the Unit of Work and DbSet as Repositories.
+
+External Services: Includes identity services, file system management, and external APIs.
+
+Presentation Layer
+
+Frontend: Can be implemented with any modern framework such as Angular, React, or Vue for SPAs, or traditional approaches like MVC or Razor Pages.
+
+Controllers: Minimalist design, with most logic delegated to the application layer.
 
 ## Build
 
@@ -17,55 +57,14 @@ dotnet watch run
 
 Navigate to https://localhost:5001. The application will automatically reload if you change any of the source files.
 
-## Code Styles & Formatting
+## Technologies
 
-The template includes [EditorConfig](https://editorconfig.org/) support to help maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs. The **.editorconfig** file defines the coding styles applicable to this solution.
+ASP.NET Core 8
 
-## Code Scaffolding
+Entity Framework Core 8
 
-The template includes support to scaffold new commands and queries.
+React 
 
-Start in the `.\src\Application\` folder.
+MediatR
 
-Create a new command:
-
-```
-dotnet new ca-usecase --name CreateTodoList --feature-name TodoLists --usecase-type command --return-type int
-```
-
-Create a new query:
-
-```
-dotnet new ca-usecase -n GetTodos -fn TodoLists -ut query -rt TodosVm
-```
-
-If you encounter the error *"No templates or subcommands found matching: 'ca-usecase'."*, install the template and try again:
-
-```bash
-dotnet new install Clean.Architecture.Solution.Template::8.0.5
-```
-
-## Test
-
-The solution contains unit, integration, functional, and acceptance tests.
-
-To run the unit, integration, and functional tests (excluding acceptance tests):
-```bash
-dotnet test --filter "FullyQualifiedName!~AcceptanceTests"
-```
-
-To run the acceptance tests, first start the application:
-
-```bash
-cd .\src\Web\
-dotnet run
-```
-
-Then, in a new console, run the tests:
-```bash
-cd .\src\Web\
-dotnet test
-```
-
-## Help
-To learn more about the template go to the [project website](https://github.com/jasontaylordev/CleanArchitecture). Here you can find additional guidance, request new features, report a bug, and discuss the template with other users.
+AutoMapper
