@@ -1,10 +1,11 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { EventParticipantsClient } from "../../web-api-client.ts";
+import { useParams, useNavigate } from 'react-router-dom';
+import {EventParticipantsClient} from "../../web-api-client.ts";
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
+import EditParticipantDetails from "./EditParticipantDetails";
+import EditParticipationDetails from "../EventParticipants/EditParticipationDetails";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -19,7 +20,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -34,11 +35,12 @@ function a11yProps(index) {
 }
 
 function ParticipantDetails() {
-  const { eventId, participantId  } = useParams();
+  const { participantId, eventId } = useParams();
   const [eventParticipant, setEventParticipant] = useState(null);
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -46,7 +48,7 @@ function ParticipantDetails() {
       try {
         let eventsClient = new EventParticipantsClient();
         const data = await eventsClient.getEventParticipant(eventId, participantId);
-        setEventParticipant(data);
+        setEventParticipant({ ...data, participant: data.participant || {} });
         setLoading(false);
       } catch (err) {
         setError(err.toString());
@@ -70,33 +72,22 @@ function ParticipantDetails() {
   }
 
   return (
+    <div>
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Event Participant Details" {...a11yProps(0)} />
+          <Tab label="Participation Details" {...a11yProps(0)} />
           <Tab label="Participant Details" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        Event Participant Details:
-        <ul>
-          <li>Payment Method: {eventParticipant.paymentMethod}</li>
-          <li>Participants Count: {eventParticipant.participantsCount}</li>
-          <li>Additional Information: {eventParticipant.additionalInfo}</li>
-        </ul>
+       <EditParticipationDetails eventParticipantDto={eventParticipant}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Participant Details:
-        <ul>
-          {eventParticipant.participant && (
-            <>
-              <li>Name: {eventParticipant.participant.type === 0 ? `${eventParticipant.participant.firstName} ${eventParticipant.participant.lastName}` : eventParticipant.participant.name}</li>
-              <li>ID Code: {eventParticipant.participant.idCode}</li>
-            </>
-          )}
-        </ul>
+        <EditParticipantDetails participantDto={eventParticipant.participant}/>
       </TabPanel>
     </Box>
+    </div>
   );
 }
 

@@ -26,7 +26,6 @@ public class GetEventParticipantQueryHandler : IRequestHandler<GetEventParticipa
 
     public async Task<EventParticipantDto> Handle(GetEventParticipantQuery request, CancellationToken cancellationToken)
     {
-
         var entity = await _context.EventParticipants
             .ProjectTo<EventParticipantDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(e =>
                 e.Participant.Id.Equals(request.ParticipantId) && e.EventId.Equals(request.EventId), cancellationToken);

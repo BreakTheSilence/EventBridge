@@ -1,6 +1,7 @@
 ﻿import React, {useState} from 'react';
 import {EventParticipantsClient, CreateEventNewParticipantCommand, AddEventCommand} from '../../web-api-client.ts';
 import {useNavigate} from "react-router-dom";
+import {IdCodeValidationService} from "../../services/IdCodeValidationService";
 
 function NewParticipantForm({eventId}) {
   const navigate = useNavigate();
@@ -32,10 +33,18 @@ function NewParticipantForm({eventId}) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(EventId);
 
-    const newEventParticipant: CreateEventNewParticipantCommand = {
-      eventId: EventId,
+    const codeValidationService = new IdCodeValidationService();
+
+    if (!isCompany){
+      if (!codeValidationService.isIdCodeValid(formData.idCode)) {
+        alert("Invalid ID code. Please enter a valid 11-digit ID code.");
+        return; // Stop the form submission if the ID code is invalid
+      }
+    }
+
+    const newEventParticipant = {
+      eventId: eventId,
       participantType: isCompany ? 1 : 0,
       firstName: isCompany ? undefined : formData.firstName,
       lastName: isCompany ? undefined : formData.lastName,
@@ -45,10 +54,10 @@ function NewParticipantForm({eventId}) {
       paymentMethod: formData.paymentMethod,
       additionalInfo: formData.additionalInfo
     };
-    console.log(newEventParticipant);
+
     let client = new EventParticipantsClient();
-    await client.createEventParticipantFromNewParticipant(newEventParticipant)
-    navigate(0)
+    await client.createEventParticipantFromNewParticipant(newEventParticipant);
+    navigate(0);
   };
 
   return (
