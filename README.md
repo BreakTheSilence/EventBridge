@@ -6,7 +6,7 @@ Login:
 Email: administrator@localhost | 
 Password: Administrator1!
 
-![Database scheme](https://ibb.co/ssN9Wzd)
+![Database scheme](https://i.ibb.co/tYvpLFT/Database-Scheme.png)
 
 ## Architecture Overview
 The project is structured into four main layers, ensuring a clear separation of concerns and promoting maintainability and scalability:
