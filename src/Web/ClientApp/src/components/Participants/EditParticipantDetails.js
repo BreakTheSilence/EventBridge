@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {ModifyParticipantCommand, ParticipantsClient} from "../../web-api-client.ts";
 import TextField from "@mui/material/TextField";
@@ -16,7 +16,7 @@ function EditParticipantDetails({participantDto: ParticipantDto}) {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   const handleParticipantChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     modifyParticipant(prevParticipant => ({
       ...prevParticipant,
       [name]: value
@@ -38,7 +38,7 @@ function EditParticipantDetails({participantDto: ParticipantDto}) {
       return;
     }
     let client = new ParticipantsClient();
-    
+
     let command: ModifyParticipantCommand = {
       id: participant.id,
       firstName: isCompany ? undefined : participant.firstName,
@@ -46,7 +46,7 @@ function EditParticipantDetails({participantDto: ParticipantDto}) {
       name: isCompany ? participant.name : undefined,
       idCode: participant.idCode
     };
-    try{
+    try {
       await client.updateParticipant(participant.id, command)
     } catch (error) {
       alert("Failed to save data. Please, try again later");
@@ -57,14 +57,14 @@ function EditParticipantDetails({participantDto: ParticipantDto}) {
     modifyIsModified(false);
   }
 
-  return(
+  return (
     <div>
       {showSuccessAlert && (
-        <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+        <Alert icon={<CheckIcon fontSize="inherit"/>} severity="success">
           Data is updated successfully.
         </Alert>
       )}
-      <h2>Participant Details</h2>
+      <h2 style={{marginBottom: 20}}>Participant Details</h2>
       {participant.type === 0 ? (
         <>
           <TextField
@@ -88,15 +88,15 @@ function EditParticipantDetails({participantDto: ParticipantDto}) {
         </>
       ) : (
         <>
-        <TextField
-          label="Name"
-          name="name"
-          value={participant.name || ''}
-          onChange={handleParticipantChange}
-          margin="normal"
-          fullWidth
-          required
-        />
+          <TextField
+            label="Name"
+            name="name"
+            value={participant.name || ''}
+            onChange={handleParticipantChange}
+            margin="normal"
+            fullWidth
+            required
+          />
         </>
       )}
       <TextField
@@ -110,12 +110,12 @@ function EditParticipantDetails({participantDto: ParticipantDto}) {
         required
       />
       <div>
-        <Stack spacing={2} direction="row">
-          <Button onClick={handeBackClick} variant="text">Back</Button>
+        <Stack spacing={2} direction="row" style={{marginTop: 30}}>
+          <Button onClick={handeBackClick} variant="outlined">Back</Button>
           <Button onClick={handeSaveParticipant} variant="contained">Save</Button>
         </Stack>
       </div>
-</div>
+    </div>
   );
 }
 

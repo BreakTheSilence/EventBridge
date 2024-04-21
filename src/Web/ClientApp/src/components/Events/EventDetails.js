@@ -1,11 +1,12 @@
-﻿import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { EventsClient } from '../../web-api-client.ts';
+﻿import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
+import {EventsClient} from '../../web-api-client.ts';
 import ParticipantsList from '../Participants/ParticipantsList';
 import NewParticipantForm from '../EventParticipants/NewParticipantForm';
+import '../../custom.css'
 
 function EventDetails() {
-  const { eventId } = useParams();
+  const {eventId} = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,16 +37,16 @@ function EventDetails() {
   }
 
   return (
-    <div>
+    <div className="event-details-container">
       <h1>Event Details</h1>
       {event ? (
         <div>
           <h2>{event.name}</h2>
           <p>Date: {new Date(event.date).toLocaleDateString()}</p>
           <p>Location: {event.location}</p>
-          <p>Description: {event.description}</p>
-          <ParticipantsList participants={event.eventParticipants} eventId={event.id}></ParticipantsList>
-          <NewParticipantForm eventId={event.id}></NewParticipantForm>
+          <p style={{marginBottom: 50}}>Description: {event.description}</p>
+          <ParticipantsList participants={event.eventParticipants} eventId={event.id}/>
+          <NewParticipantForm style={{marginTop: 50}} eventId={event.id}/>
         </div>
       ) : (
         <p>Event not found</p>

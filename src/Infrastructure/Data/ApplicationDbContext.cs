@@ -11,8 +11,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-    public DbSet<TodoList> TodoLists => Set<TodoList>();
-    public DbSet<TodoItem> TodoItems => Set<TodoItem>();
     public DbSet<Event> Events => Set<Event>();
     public DbSet<Participant> Participants => Set<Participant>();
     public DbSet<EventParticipant> EventParticipants => Set<EventParticipant>();
@@ -21,7 +19,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        
+
         builder.Entity<EventParticipant>()
             .HasKey(ep => new { ep.EventId, ep.ParticipantId });
 
@@ -35,7 +33,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
             .HasOne(ep => ep.Participant)
             .WithMany(p => p.EventParticipants)
             .HasForeignKey(ep => ep.ParticipantId);
-        
+
         builder.Entity<EventParticipant>().Ignore(ep => ep.Id);
     }
 }

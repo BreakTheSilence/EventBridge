@@ -1,8 +1,10 @@
-﻿import React, { useState } from 'react';
+﻿import React, {useState} from 'react';
 import {EventParticipantsClient} from "../../web-api-client.ts";
 import {useNavigate} from "react-router-dom";
+import '../../custom.css'
+import Button from "@mui/material/Button";
 
-function ParticipantsList({ participants, eventId }) {
+function ParticipantsList({participants, eventId}) {
   const navigate = useNavigate();
   const [participantsList, setParticipants] = useState(participants);
 
@@ -19,28 +21,33 @@ function ParticipantsList({ participants, eventId }) {
     const updatedParticipants = participantsList.filter(participant => participant.id !== participantId)
     setParticipants(updatedParticipants)
   }
-const renderList = (participantsList) => {
+  const renderList = (participantsList) => {
+    return (
+      <div className="participants-container">
+        <h2>Participants:</h2>
+        <ol>
+          {participantsList.map((participant, index) => (
+            <li key={participant.id}>
+              <span>{index + 1}. </span>
+              <span>
+          {participant.type === 0 ? `${participant.firstName} ${participant.lastName}` : participant.name}
+        </span>
+              <span className="id-code">{participant.idCode}</span>
+              <Button style={{marginRight: 10}} variant="contained" color="warning"
+                      onClick={() => handleEdit(participant.id, eventId)}>Edit</Button>
+              <Button variant="outlined" color="error"
+                      onClick={() => handleDelete(participant.id, eventId)}>Delete</Button>
+            </li>
+          ))}
+        </ol>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <h2>Participants list</h2>
-      <ul>
-        {participantsList.map((participant) => (
-          <li key={participant.id}>
-            {participant.type === 0 ? `${participant.firstName} ${participant.lastName}` : participant.name}
-            <span> - ID code: {participant.idCode}</span>
-            <button onClick={() => handleEdit(participant.id, eventId)}>Edit</button>
-            <button onClick={() => handleDelete(participant.id, eventId)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
- 
-return(
-  <div>{renderList(participantsList)}</div>
-)
-  
+    <div>{renderList(participantsList)}</div>
+  )
+
 }
 
 export default ParticipantsList;

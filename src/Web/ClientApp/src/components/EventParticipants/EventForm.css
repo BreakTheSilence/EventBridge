@@ -1,0 +1,8 @@
+﻿.checkbox-group label {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 0.5em; /* Add space between checkbox and label */
+}

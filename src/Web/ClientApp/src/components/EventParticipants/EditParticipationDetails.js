@@ -1,9 +1,6 @@
-﻿import React, { useState } from 'react';
+﻿import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {
-  EventParticipantsClient,
-  ModifyEventParticipantCommand
-} from "../../web-api-client.ts";
+import {EventParticipantsClient, ModifyEventParticipantCommand} from "../../web-api-client.ts";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -18,7 +15,7 @@ function EditParticipationDetails({eventParticipantDto: EventParticipantDto}) {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     let finalValue = value;
     if (name === "paymentMethod") {
       finalValue = (value === "cash") ? 0 : 1;
@@ -37,7 +34,7 @@ function EditParticipationDetails({eventParticipantDto: EventParticipantDto}) {
 
   async function handeSaveEventParticipation() {
     if (!isModified) return;
-    
+
     let client = new EventParticipantsClient();
     console.log(eventParticipant.paymentMethod);
     let command: ModifyEventParticipantCommand = {
@@ -45,9 +42,9 @@ function EditParticipationDetails({eventParticipantDto: EventParticipantDto}) {
       participantId: eventParticipant.participant.id,
       paymentMethod: eventParticipant.paymentMethod,
       participantsCount: isCompany ? eventParticipant.participantsCount : 1,
-      additionalInfo : eventParticipant.additionalInfo
+      additionalInfo: eventParticipant.additionalInfo
     };
-    try{
+    try {
       await client.updateEventParticipant(eventParticipant.eventId, eventParticipant.participant.id, command);
     } catch (error) {
       alert("Failed to save data. Please, try again later");
@@ -58,15 +55,15 @@ function EditParticipationDetails({eventParticipantDto: EventParticipantDto}) {
     modifyIsModified(false);
   }
 
-  return(
+  return (
     <div>
       {showSuccessAlert && (
         <Alert icon={<CheckIcon fontSize="inherit"/>} severity="success">
           Data is updated successfully.
         </Alert>
       )}
-      <h2>Participation details</h2>
-      <label>
+      <h2 style={{marginBottom: 30}}>Participation details</h2>
+      <label style={{marginBottom: 30}}>
         Payment method:
         <select
           name="paymentMethod"
@@ -98,8 +95,8 @@ function EditParticipationDetails({eventParticipantDto: EventParticipantDto}) {
         fullWidth
       />
       <div>
-        <Stack spacing={2} direction="row">
-          <Button onClick={handeBackClick} variant="text">Back</Button>
+        <Stack spacing={2} direction="row" style={{marginTop: 30}}>
+          <Button onClick={handeBackClick} variant="outlined">Back</Button>
           <Button onClick={handeSaveEventParticipation} variant="contained">Save</Button>
         </Stack>
       </div>

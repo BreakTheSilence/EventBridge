@@ -1,23 +1,23 @@
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #0366d6;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 code {
-  color: #E01A76;
+    color: #E01A76;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
-.site-wrapper{
+.site-wrapper {
     max-width: 70%;
     margin: 0 auto;
 }
@@ -28,4 +28,142 @@ code {
 
 .main-container {
     background-color: white;
+}
+
+.text-image-container {
+    display: flex;
+    align-items: stretch;
+}
+
+.text-image-container > .stack {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.text-area {
+    flex: 1;
+    background-color: #004c8c;
+    color: white;
+    padding: 20px;
+    text-align: justify;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+}
+
+.image-area {
+    flex: 1;
+    display: flex;
+}
+
+.image-area img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.events-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.future-events,
+.past-events {
+    color: white;
+    padding: 20px;
+    width: 48%;
+    margin: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+.events-table-header-div {
+    background-color: #005aa1;
+    text-align: center;
+    color: white;
+}
+
+
+.participants-container {
+    font-family: Arial, sans-serif;
+}
+
+.participants-container {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.participants-container ol {
+    list-style: none;
+    padding-left: 0;
+}
+
+.participants-container li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.participants-container li span {
+    margin-right: 10px;
+}
+
+.id-code {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.event-details-container {
+    font-family: Arial, sans-serif;
+}
+
+.event-details-container h1, .event-details-container h2 {
+    margin: 0;
+    padding-bottom: 0.5em;
+}
+
+.event-details-container p {
+    margin: 0.25em 0;
+}
+
+.create-event-container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.create-event-image-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.create-event-image-container div {
+    background-color: #005aa1;
+    font-size: 20px;
+    text-align: center;
+    color: white;
+    width: 15%;
+}
+
+.create-event-image-container img {
+    width: 85%;
+}
+
+.create-event-image {
+    height: auto;
+    object-fit: cover;
 }

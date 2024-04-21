@@ -1,7 +1,9 @@
 ﻿import React, {useState} from 'react';
-import {EventParticipantsClient, CreateEventNewParticipantCommand, AddEventCommand} from '../../web-api-client.ts';
+import {EventParticipantsClient} from '../../web-api-client.ts';
 import {useNavigate} from "react-router-dom";
 import {IdCodeValidationService} from "../../services/IdCodeValidationService";
+import './EventForm.css';
+import Button from "@mui/material/Button";
 
 function NewParticipantForm({eventId}) {
   const navigate = useNavigate();
@@ -36,7 +38,7 @@ function NewParticipantForm({eventId}) {
 
     const codeValidationService = new IdCodeValidationService();
 
-    if (!isCompany){
+    if (!isCompany) {
       if (!codeValidationService.isIdCodeValid(formData.idCode)) {
         alert("Invalid ID code. Please enter a valid 11-digit ID code.");
         return; // Stop the form submission if the ID code is invalid
@@ -60,112 +62,127 @@ function NewParticipantForm({eventId}) {
     navigate(0);
   };
 
+  function handleBackButton() {
+    navigate(-1);
+  }
+
   return (
-    <div>
+    <div className="form-container">
       <h2>Add new participant</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={isCompany}
-              onChange={() => setIsCompany(!isCompany)}
-            />
-            Компания
-          </label>
+      <form onSubmit={handleSubmit} className="event-form">
+        <div className="checkbox-group" style={{marginBottom: 20}}>
+          <span>Company</span>
+          <input
+            type="checkbox"
+            checked={isCompany}
+            onChange={() => setIsCompany(!isCompany)}
+          />
         </div>
 
         {isCompany ? (
-          <div>
-            <label>
-              Название компании:
-              <input
-                type="text"
-                name="companyName"
-                value={formData.companyName}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Reg. code:
-              <input
-                type="text"
-                name="idCode"
-                value={formData.idCode}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Количество участников:
-              <input
-                type="number"
-                name="participantsCount"
-                value={formData.participantsCount}
-                onChange={handleChange}
-                required
-              />
-            </label>
-          </div>
+          // If it is a company, show the company fields
+          <>
+            <div className="form-group">
+              <label>Company name:
+                <input
+                  type="text"
+                  name="companyName"
+                  value={formData.companyName}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+            </div>
+            <div className="form-group">
+              <label>Reg. code:
+                <input
+                  type="text"
+                  name="idCode"
+                  value={formData.idCode}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+            </div>
+            <div className="form-group">
+              <label>Participants count:
+                <input
+                  type="number"
+                  name="participantsCount"
+                  value={formData.participantsCount}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+            </div>
+          </>
         ) : (
-          <div>
-            <label>
-              Имя:
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Фамилия:
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Ид код:
-              <input
-                type="text"
-                name="idCode"
-                value={formData.idCode}
-                onChange={handleChange}
-                required
-              />
-            </label>
-          </div>
+          // If it is not a company, show the individual fields
+          <>
+            <div className="form-group">
+              <label>First name:
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+            </div>
+            <div className="form-group">
+              <label>Last name:
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+            </div>
+            <div className="form-group">
+              <label>ID code:
+                <input
+                  type="text"
+                  name="idCode"
+                  value={formData.idCode}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+            </div>
+          </>
         )}
 
-        <label>
-          Метод оплаты:
-          <select
-            name="paymentMethod"
-            value={formData.paymentMethod === 0 ? "cash" : "bank transfer"}
-            onChange={handleChange}
-          >
-            <option value="cash">Наличные</option>
-            <option value="bank transfer">Банковский перевод</option>
-          </select>
-        </label>
+        <div className="form-group">
+          <label>Payment method:
+            <select
+              name="paymentMethod"
+              value={formData.paymentMethod === 0 ? "cash" : "bank transfer"}
+              onChange={handleChange}
+            >
+              <option value="cash">Cash</option>
+              <option value="bank transfer">Bank transfer</option>
+            </select>
+          </label>
+        </div>
 
-        <label>
-          Дополнительная информация:
-          <textarea
-            name="additionalInfo"
-            value={formData.additionalInfo}
-            onChange={handleChange}
-            maxLength={isCompany ? 5000 : 1500}
-          />
-        </label>
+        <div className="form-group">
+          <label>Additional information:
+            <textarea
+              name="additionalInfo"
+              value={formData.additionalInfo}
+              onChange={handleChange}
+              maxLength={isCompany ? 5000 : 1500}
+            />
+          </label>
+        </div>
 
-        <button type="submit">Отправить</button>
+        <div className="form-actions">
+          <Button variant="outlined" onClick={handleBackButton}>Back</Button>
+          <Button variant="contained" type="submit">Send</Button>
+        </div>
       </form>
     </div>
   );

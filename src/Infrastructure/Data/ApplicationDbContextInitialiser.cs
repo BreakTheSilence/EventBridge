@@ -1,6 +1,6 @@
-﻿using System.Runtime.InteropServices;
-using EventBridge.Domain.Constants;
+﻿using EventBridge.Domain.Constants;
 using EventBridge.Domain.Entities;
+using EventBridge.Domain.Enums;
 using EventBridge.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -14,9 +14,10 @@ public static class InitialiserExtensions
 {
     public static async Task InitialiseDatabaseAsync(this WebApplication app)
     {
-        using var scope = app.Services.CreateScope();
+        using IServiceScope scope = app.Services.CreateScope();
 
-        var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+        ApplicationDbContextInitialiser initialiser =
+            scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
 
         await initialiser.InitialiseAsync();
 
@@ -26,12 +27,13 @@ public static class InitialiserExtensions
 
 public class ApplicationDbContextInitialiser
 {
-    private readonly ILogger<ApplicationDbContextInitialiser> _logger;
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ILogger<ApplicationDbContextInitialiser> _logger;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger,
+        ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
     {
         _logger = logger;
         _context = context;
@@ -68,7 +70,7 @@ public class ApplicationDbContextInitialiser
     public async Task TrySeedAsync()
     {
         // Default roles
-        var administratorRole = new IdentityRole(Roles.Administrator);
+        IdentityRole administratorRole = new IdentityRole(Roles.Administrator);
 
         if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
         {
@@ -76,34 +78,79 @@ public class ApplicationDbContextInitialiser
         }
 
         // Default users
-        var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
+        ApplicationUser administrator =
+            new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
 
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
         {
             await _userManager.CreateAsync(administrator, "Administrator1!");
             if (!string.IsNullOrWhiteSpace(administratorRole.Name))
             {
-                await _userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
+                await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
             }
         }
 
         // Default data
         // Seed, if necessary
-        if (!_context.TodoLists.Any())
+        if (!_context.Events.Any())
         {
-            _context.TodoLists.Add(new TodoList
+            Event firstEvent = new Event
             {
-                Title = "Todo List",
-                Items =
-                {
-                    new TodoItem { Title = "Make a todo list 📃" },
-                    new TodoItem { Title = "Check off the first item ✅" },
-                    new TodoItem { Title = "Realise you've already done two things on the list! 🤯"},
-                    new TodoItem { Title = "Reward yourself with a nice, long nap 🏆" },
-                }
-            });
+                Name = "Conference",
+                Date = new DateTime(2024, 5, 1),
+                Location = "Virtual",
+                Description = "A conference on technology and innovation."
+            };
 
+            Event secondEvent = new Event
+            {
+                Name = "Workshop",
+                Date = new DateTime(2024, 5, 15),
+                Location = "In-person",
+                Description = "A hands-on workshop for developers."
+            };
+
+            _context.Events.AddRange(firstEvent, secondEvent);
+            await _context.SaveChangesAsync();
+
+            Participant participant1 = new Participant
+            {
+                Type = ParticipantType.Individual, FirstName = "John", LastName = "Doe", IdCode = 255968703867
+            };
+
+            Participant participant2 = new Participant
+            {
+                Type = ParticipantType.Individual, FirstName = "Alice", LastName = "Smith", IdCode = 254444703867
+            };
+            Participant participant3 = new Participant
+            {
+                Type = ParticipantType.Company, Name = "ÕÄ OÜ", IdCode = 254443867
+            };
+
+            _context.Participants.AddRange(participant1, participant2, participant3);
+            await _context.SaveChangesAsync();
+
+            _context.EventParticipants.AddRange(
+                new EventParticipant
+                {
+                    Event = firstEvent,
+                    Participant = participant1,
+                    PaymentMethod = PaymentMethod.BankTransfer,
+                    ParticipantsCount = 1,
+                    AdditionalInfo = "Registered early bird"
+                },
+                new EventParticipant
+                {
+                    Event = firstEvent,
+                    Participant = participant2,
+                    PaymentMethod = PaymentMethod.Cash,
+                    ParticipantsCount = 1,
+                    AdditionalInfo = "Speaker"
+                }
+            );
             await _context.SaveChangesAsync();
         }
+
+        await _context.SaveChangesAsync();
     }
 }
