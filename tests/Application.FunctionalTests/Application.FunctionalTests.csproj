@@ -7,6 +7,8 @@
 
     <ItemGroup>
       <None Remove="appsettings.json" />
+      <None Remove="TodoItems\**" />
+      <None Remove="TodoLists\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -35,6 +37,16 @@
     
     <ItemGroup>
         <ProjectReference Include="..\..\src\Web\Web.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="TodoItems\**" />
+      <Compile Remove="TodoLists\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <EmbeddedResource Remove="TodoItems\**" />
+      <EmbeddedResource Remove="TodoLists\**" />
     </ItemGroup>
 
 </Project>
