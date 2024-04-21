@@ -2,18 +2,6 @@
 
 public class Colour(string code) : ValueObject
 {
-    public static Colour From(string code)
-    {
-        var colour = new Colour(code);
-
-        if (!SupportedColours.Contains(colour))
-        {
-            throw new UnsupportedColourException(code);
-        }
-
-        return colour;
-    }
-
     public static Colour White => new("#FFFFFF");
 
     public static Colour Red => new("#FF5733");
@@ -30,22 +18,7 @@ public class Colour(string code) : ValueObject
 
     public static Colour Grey => new("#999999");
 
-    public string Code { get; private set; } = string.IsNullOrWhiteSpace(code)?"#000000":code;
-
-    public static implicit operator string(Colour colour)
-    {
-        return colour.ToString();
-    }
-
-    public static explicit operator Colour(string code)
-    {
-        return From(code);
-    }
-
-    public override string ToString()
-    {
-        return Code;
-    }
+    public string Code { get; } = string.IsNullOrWhiteSpace(code) ? "#000000" : code;
 
     protected static IEnumerable<Colour> SupportedColours
     {
@@ -60,6 +33,33 @@ public class Colour(string code) : ValueObject
             yield return Purple;
             yield return Grey;
         }
+    }
+
+    public static Colour From(string code)
+    {
+        Colour colour = new Colour(code);
+
+        if (!SupportedColours.Contains(colour))
+        {
+            throw new UnsupportedColourException(code);
+        }
+
+        return colour;
+    }
+
+    public static implicit operator string(Colour colour)
+    {
+        return colour.ToString();
+    }
+
+    public static explicit operator Colour(string code)
+    {
+        return From(code);
+    }
+
+    public override string ToString()
+    {
+        return Code;
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

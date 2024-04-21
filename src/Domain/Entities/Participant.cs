@@ -7,6 +7,6 @@ public class Participant : BaseAuditableEntity
     public string? LastName { get; set; }
     public string? Name { get; set; }
     public long IdCode { get; set; }
-    
+
     public virtual ICollection<EventParticipant> EventParticipants { get; set; } = new List<EventParticipant>();
 }

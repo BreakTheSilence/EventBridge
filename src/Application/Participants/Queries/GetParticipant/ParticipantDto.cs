@@ -10,7 +10,7 @@ public class ParticipantDto
     public string? LastName { get; set; }
     public string? Name { get; set; }
     public long IdCode { get; set; }
-    
+
     private class Mapping : Profile
     {
         public Mapping()

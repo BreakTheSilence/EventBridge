@@ -1,4 +1,5 @@
 ﻿using EventBridge.Application.Common.Interfaces;
+using EventBridge.Domain.Entities;
 using EventBridge.Domain.Events;
 
 namespace EventBridge.Application.EventParticipants.Commands.DeleteEventParticipant;
@@ -9,9 +10,6 @@ public record DeleteEventParticipantCommand(int EventId, int ParticipantId) : IR
 
 public class DeleteEventParticipantCommandValidator : AbstractValidator<DeleteEventParticipantCommand>
 {
-    public DeleteEventParticipantCommandValidator()
-    {
-    }
 }
 
 public class DeleteEventParticipantCommandHandler : IRequestHandler<DeleteEventParticipantCommand>
@@ -25,13 +23,14 @@ public class DeleteEventParticipantCommandHandler : IRequestHandler<DeleteEventP
 
     public async Task Handle(DeleteEventParticipantCommand request, CancellationToken cancellationToken)
     {
-        var keys = new object[] { request.EventId, request.ParticipantId };
-    
-        var entity = await _context.EventParticipants.FindAsync(keys, cancellationToken);
+        object[] keys = new object[] { request.EventId, request.ParticipantId };
+
+        EventParticipant? entity = await _context.EventParticipants.FindAsync(keys, cancellationToken);
 
         if (entity == null)
         {
-            throw new KeyNotFoundException($"Entity with EventId {request.EventId} and ParticipantId {request.ParticipantId} not found.");
+            throw new KeyNotFoundException(
+                $"Entity with EventId {request.EventId} and ParticipantId {request.ParticipantId} not found.");
         }
 
         _context.EventParticipants.Remove(entity);

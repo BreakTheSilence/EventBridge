@@ -10,15 +10,15 @@ public class EventWithParticipantsDto
     public string? Description { get; set; } = string.Empty;
 
     public IEnumerable<ParticipantDto> EventParticipants { get; set; } = Array.Empty<ParticipantDto>();
-    
+
     private class Mapping : Profile
     {
         public Mapping()
         {
             CreateMap<Event, EventWithParticipantsDto>()
-                .ForMember(dest => dest.EventParticipants, opt => opt.MapFrom(src => 
+                .ForMember(dest => dest.EventParticipants, opt => opt.MapFrom(src =>
                     src.EventParticipants.Select(ep => ep.Participant)));
-            
+
             CreateMap<Participant, ParticipantDto>();
         }
     }

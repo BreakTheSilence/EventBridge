@@ -21,9 +21,6 @@ public record CreateEventNewParticipantCommand : IRequest<int>
 
 public class CreateEventNewParticipantCommandValidator : AbstractValidator<CreateEventNewParticipantCommand>
 {
-    public CreateEventNewParticipantCommandValidator()
-    {
-    }
 }
 
 public class CreateEventNewParticipantCommandHandler : IRequestHandler<CreateEventNewParticipantCommand, int>
@@ -37,9 +34,9 @@ public class CreateEventNewParticipantCommandHandler : IRequestHandler<CreateEve
 
     public async Task<int> Handle(CreateEventNewParticipantCommand request, CancellationToken cancellationToken)
     {
-        var participant = await SaveParticipant(request, cancellationToken);
+        Participant participant = await SaveParticipant(request, cancellationToken);
 
-        var eventParticipant = new EventParticipant()
+        EventParticipant eventParticipant = new EventParticipant
         {
             EventId = request.EventId,
             ParticipantId = participant.Id,
@@ -47,7 +44,7 @@ public class CreateEventNewParticipantCommandHandler : IRequestHandler<CreateEve
             ParticipantsCount = participant.Type == ParticipantType.Company ? request.ParticipationCount : 1,
             AdditionalInfo = request.AdditionalInfo
         };
-        
+
         eventParticipant.AddDomainEvent(new EventParticipantCreatedEvent(eventParticipant));
 
         _context.EventParticipants.Add(eventParticipant);
@@ -57,10 +54,11 @@ public class CreateEventNewParticipantCommandHandler : IRequestHandler<CreateEve
         return 200;
     }
 
-    private async Task<Participant> SaveParticipant(CreateEventNewParticipantCommand request, CancellationToken cancellationToken)
+    private async Task<Participant> SaveParticipant(CreateEventNewParticipantCommand request,
+        CancellationToken cancellationToken)
     {
-        var participantType = (ParticipantType)request.ParticipantType;
-        var participant = new Participant()
+        ParticipantType participantType = (ParticipantType)request.ParticipantType;
+        Participant participant = new Participant
         {
             Type = participantType,
             FirstName = participantType == ParticipantType.Individual ? request.FirstName : null,
@@ -68,7 +66,7 @@ public class CreateEventNewParticipantCommandHandler : IRequestHandler<CreateEve
             Name = participantType == ParticipantType.Company ? request.Name : null,
             IdCode = request.IdCode
         };
-        
+
         participant.AddDomainEvent(new ParticipantCreatedEvent(participant));
 
         _context.Participants.Add(participant);

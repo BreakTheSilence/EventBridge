@@ -6,6 +6,6 @@ public class EventDeletedEvent : BaseEvent
     {
         Event = @event;
     }
-    public Event Event { get; set; }
 
+    public Event Event { get; set; }
 }

@@ -9,12 +9,11 @@ public record GetParticipantsNotPresentInEventQuery(int EventId) : IRequest<List
 
 public class GetParticipantsNotPresentInEventQueryValidator : AbstractValidator<GetParticipantsNotPresentInEventQuery>
 {
-    public GetParticipantsNotPresentInEventQueryValidator()
-    {
-    }
 }
 
-public class GetParticipantsNotPresentInEventQueryHandler : IRequestHandler<GetParticipantsNotPresentInEventQuery, List<ParticipantDto>>
+public class
+    GetParticipantsNotPresentInEventQueryHandler : IRequestHandler<GetParticipantsNotPresentInEventQuery,
+    List<ParticipantDto>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -25,14 +24,15 @@ public class GetParticipantsNotPresentInEventQueryHandler : IRequestHandler<GetP
         _mapper = mapper;
     }
 
-    public async Task<List<ParticipantDto>> Handle(GetParticipantsNotPresentInEventQuery request, CancellationToken cancellationToken)
+    public async Task<List<ParticipantDto>> Handle(GetParticipantsNotPresentInEventQuery request,
+        CancellationToken cancellationToken)
     {
-        var registeredParticipantIds = _context.EventParticipants
+        IQueryable<int> registeredParticipantIds = _context.EventParticipants
             .Where(ep => ep.EventId == request.EventId)
             .Select(ep => ep.ParticipantId)
             .Distinct();
 
-        var unregisteredParticipants = _context.Participants
+        IQueryable<ParticipantDto>? unregisteredParticipants = _context.Participants
             .Where(p => !registeredParticipantIds.Contains(p.Id))
             .ProjectTo<ParticipantDto>(_mapper.ConfigurationProvider);
 

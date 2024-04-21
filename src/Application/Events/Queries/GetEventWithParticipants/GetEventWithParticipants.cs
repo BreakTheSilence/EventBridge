@@ -8,12 +8,10 @@ public record GetEventWithParticipantsQuery(int Id) : IRequest<EventWithParticip
 
 public class GetEventWithParticipantsQueryValidator : AbstractValidator<GetEventWithParticipantsQuery>
 {
-    public GetEventWithParticipantsQueryValidator()
-    {
-    }
 }
 
-public class GetEventWithParticipantsQueryHandler : IRequestHandler<GetEventWithParticipantsQuery, EventWithParticipantsDto>
+public class
+    GetEventWithParticipantsQueryHandler : IRequestHandler<GetEventWithParticipantsQuery, EventWithParticipantsDto>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -24,15 +22,16 @@ public class GetEventWithParticipantsQueryHandler : IRequestHandler<GetEventWith
         _mapper = mapper;
     }
 
-    public async Task<EventWithParticipantsDto> Handle(GetEventWithParticipantsQuery request, CancellationToken cancellationToken)
+    public async Task<EventWithParticipantsDto> Handle(GetEventWithParticipantsQuery request,
+        CancellationToken cancellationToken)
     {
-        var eventWithParticipants = await _context.Events
+        EventWithParticipantsDto? eventWithParticipants = await _context.Events
             .Include(e => e.EventParticipants)
             .ThenInclude(ep => ep.Participant)
             .ProjectTo<EventWithParticipantsDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken);
 
-          Guard.Against.NotFound(request.Id, eventWithParticipants);
+        Guard.Against.NotFound(request.Id, eventWithParticipants);
 
         return eventWithParticipants;
     }

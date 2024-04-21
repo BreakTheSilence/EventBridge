@@ -8,9 +8,6 @@ public record GetEventParticipantQuery(int EventId, int ParticipantId) : IReques
 
 public class GetEventParticipantQueryValidator : AbstractValidator<GetEventParticipantQuery>
 {
-    public GetEventParticipantQueryValidator()
-    {
-    }
 }
 
 public class GetEventParticipantQueryHandler : IRequestHandler<GetEventParticipantQuery, EventParticipantDto>
@@ -26,13 +23,14 @@ public class GetEventParticipantQueryHandler : IRequestHandler<GetEventParticipa
 
     public async Task<EventParticipantDto> Handle(GetEventParticipantQuery request, CancellationToken cancellationToken)
     {
-        var entity = await _context.EventParticipants
+        EventParticipantDto? entity = await _context.EventParticipants
             .ProjectTo<EventParticipantDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(e =>
                 e.Participant.Id.Equals(request.ParticipantId) && e.EventId.Equals(request.EventId), cancellationToken);
 
         if (entity == null)
         {
-            throw new KeyNotFoundException($"Entity with EventId {request.EventId} and ParticipantId {request.ParticipantId} not found.");
+            throw new KeyNotFoundException(
+                $"Entity with EventId {request.EventId} and ParticipantId {request.ParticipantId} not found.");
         }
 
         return entity;

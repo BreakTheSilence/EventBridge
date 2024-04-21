@@ -1,4 +1,5 @@
 ﻿using EventBridge.Application.Common.Interfaces;
+using EventBridge.Domain.Entities;
 using EventBridge.Domain.Events;
 
 namespace EventBridge.Application.Events.Commands.DeleteEvent;
@@ -9,9 +10,6 @@ public record DeleteEventCommand(int Id) : IRequest
 
 public class DeleteEventCommandValidator : AbstractValidator<DeleteEventCommand>
 {
-    public DeleteEventCommandValidator()
-    {
-    }
 }
 
 public class DeleteEventCommandHandler : IRequestHandler<DeleteEventCommand>
@@ -25,7 +23,7 @@ public class DeleteEventCommandHandler : IRequestHandler<DeleteEventCommand>
 
     public async Task Handle(DeleteEventCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.Events
+        Event? entity = await _context.Events
             .FindAsync([request.Id], cancellationToken);
 
         Guard.Against.NotFound(request.Id, entity);

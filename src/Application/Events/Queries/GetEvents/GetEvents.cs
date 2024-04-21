@@ -12,9 +12,6 @@ public record GetEventsQuery : IRequest<PaginatedList<EventDto>>
 
 public class GetEventsQueryValidator : AbstractValidator<GetEventsQuery>
 {
-    public GetEventsQueryValidator()
-    {
-    }
 }
 
 public class GetEventsQueryHandler : IRequestHandler<GetEventsQuery, PaginatedList<EventDto>>

@@ -70,7 +70,7 @@ public class ApplicationDbContextInitialiser
     public async Task TrySeedAsync()
     {
         // Default roles
-        IdentityRole administratorRole = new IdentityRole(Roles.Administrator);
+        IdentityRole administratorRole = new(Roles.Administrator);
 
         if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
         {
@@ -79,7 +79,7 @@ public class ApplicationDbContextInitialiser
 
         // Default users
         ApplicationUser administrator =
-            new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
+            new() { UserName = "administrator@localhost", Email = "administrator@localhost" };
 
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
         {
@@ -94,7 +94,7 @@ public class ApplicationDbContextInitialiser
         // Seed, if necessary
         if (!_context.Events.Any())
         {
-            Event firstEvent = new Event
+            Event firstEvent = new()
             {
                 Name = "Conference",
                 Date = new DateTime(2024, 5, 1),
@@ -102,7 +102,7 @@ public class ApplicationDbContextInitialiser
                 Description = "A conference on technology and innovation."
             };
 
-            Event secondEvent = new Event
+            Event secondEvent = new()
             {
                 Name = "Workshop",
                 Date = new DateTime(2024, 5, 15),
@@ -113,19 +113,16 @@ public class ApplicationDbContextInitialiser
             _context.Events.AddRange(firstEvent, secondEvent);
             await _context.SaveChangesAsync();
 
-            Participant participant1 = new Participant
+            Participant participant1 = new()
             {
                 Type = ParticipantType.Individual, FirstName = "John", LastName = "Doe", IdCode = 255968703867
             };
 
-            Participant participant2 = new Participant
+            Participant participant2 = new()
             {
                 Type = ParticipantType.Individual, FirstName = "Alice", LastName = "Smith", IdCode = 254444703867
             };
-            Participant participant3 = new Participant
-            {
-                Type = ParticipantType.Company, Name = "ÕÄ OÜ", IdCode = 254443867
-            };
+            Participant participant3 = new() { Type = ParticipantType.Company, Name = "ÕÄ OÜ", IdCode = 254443867 };
 
             _context.Participants.AddRange(participant1, participant2, participant3);
             await _context.SaveChangesAsync();

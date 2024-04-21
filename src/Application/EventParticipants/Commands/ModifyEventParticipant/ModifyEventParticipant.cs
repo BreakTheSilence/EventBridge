@@ -1,4 +1,5 @@
 ﻿using EventBridge.Application.Common.Interfaces;
+using EventBridge.Domain.Entities;
 using EventBridge.Domain.Enums;
 
 namespace EventBridge.Application.EventParticipants.Commands.ModifyEventParticipant;
@@ -14,9 +15,6 @@ public record ModifyEventParticipantCommand : IRequest
 
 public class ModifyEventParticipantCommandValidator : AbstractValidator<ModifyEventParticipantCommand>
 {
-    public ModifyEventParticipantCommandValidator()
-    {
-    }
 }
 
 public class ModifyEventParticipantCommandHandler : IRequestHandler<ModifyEventParticipantCommand>
@@ -30,14 +28,15 @@ public class ModifyEventParticipantCommandHandler : IRequestHandler<ModifyEventP
 
     public async Task Handle(ModifyEventParticipantCommand request, CancellationToken cancellationToken)
     {
-        var entity =
-            await _context.EventParticipants.FindAsync(request.EventId, request.ParticipantId , cancellationToken);
+        EventParticipant? entity =
+            await _context.EventParticipants.FindAsync(request.EventId, request.ParticipantId, cancellationToken);
         if (entity is null)
         {
-            throw new KeyNotFoundException($"Entity with EventId {request.EventId} and ParticipantId {request.ParticipantId} not found.");
+            throw new KeyNotFoundException(
+                $"Entity with EventId {request.EventId} and ParticipantId {request.ParticipantId} not found.");
         }
-        
-        var participant = await _context.Participants.FindAsync(request.ParticipantId , cancellationToken);
+
+        Participant? participant = await _context.Participants.FindAsync(request.ParticipantId, cancellationToken);
 
         if (participant == null)
         {

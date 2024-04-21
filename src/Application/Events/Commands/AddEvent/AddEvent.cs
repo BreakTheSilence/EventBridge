@@ -14,9 +14,6 @@ public record AddEventCommand : IRequest<int>
 
 public class AddEventCommandValidator : AbstractValidator<AddEventCommand>
 {
-    public AddEventCommandValidator()
-    {
-    }
 }
 
 public class AddEventCommandHandler : IRequestHandler<AddEventCommand, int>
@@ -30,14 +27,11 @@ public class AddEventCommandHandler : IRequestHandler<AddEventCommand, int>
 
     public async Task<int> Handle(AddEventCommand request, CancellationToken cancellationToken)
     {
-        var entity = new Event()
+        Event entity = new Event
         {
-            Name = request.Name,
-            Date = request.Date,
-            Location = request.Location,
-            Description = request.Description
+            Name = request.Name, Date = request.Date, Location = request.Location, Description = request.Description
         };
-        
+
         entity.AddDomainEvent(new EventCreatedEvent(entity));
 
         _context.Events.Add(entity);

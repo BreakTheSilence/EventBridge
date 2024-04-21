@@ -1,4 +1,5 @@
 ﻿using EventBridge.Application.Common.Interfaces;
+using EventBridge.Domain.Entities;
 using EventBridge.Domain.Enums;
 
 namespace EventBridge.Application.Participants.Commands.ModifyParticipant;
@@ -14,9 +15,6 @@ public record ModifyParticipantCommand : IRequest
 
 public class ModifyParticipantCommandValidator : AbstractValidator<ModifyParticipantCommand>
 {
-    public ModifyParticipantCommandValidator()
-    {
-    }
 }
 
 public class ModifyParticipantCommandHandler : IRequestHandler<ModifyParticipantCommand>
@@ -30,12 +28,12 @@ public class ModifyParticipantCommandHandler : IRequestHandler<ModifyParticipant
 
     public async Task Handle(ModifyParticipantCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.Participants
+        Participant? entity = await _context.Participants
             .FindAsync([request.Id], cancellationToken);
-        
+
         Guard.Against.NotFound(request.Id, entity);
 
-        var participantType = entity.Type;
+        ParticipantType participantType = entity.Type;
 
         entity.FirstName = participantType == ParticipantType.Individual ? request.FirstName : null;
         entity.LastName = participantType == ParticipantType.Individual ? request.LastName : null;

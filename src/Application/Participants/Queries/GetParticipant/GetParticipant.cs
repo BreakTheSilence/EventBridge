@@ -4,14 +4,10 @@ namespace EventBridge.Application.Participants.Queries.GetParticipant;
 
 public record GetParticipantQuery(int Id) : IRequest<ParticipantDto>
 {
-    
 }
 
 public class GetParticipantQueryValidator : AbstractValidator<GetParticipantQuery>
 {
-    public GetParticipantQueryValidator()
-    {
-    }
 }
 
 public class GetParticipantQueryHandler : IRequestHandler<GetParticipantQuery, ParticipantDto>
@@ -27,7 +23,7 @@ public class GetParticipantQueryHandler : IRequestHandler<GetParticipantQuery, P
 
     public async Task<ParticipantDto> Handle(GetParticipantQuery request, CancellationToken cancellationToken)
     {
-        var participantDto = await _context.Participants
+        ParticipantDto? participantDto = await _context.Participants
             .Where(p => p.Id == request.Id)
             .ProjectTo<ParticipantDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
