@@ -16,3 +16,16 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.site-wrapper{
+    max-width: 70%;
+    margin: 0 auto;
+}
+
+.background-div {
+    background-color: #eef2f5;
+}
+
+.main-container {
+    background-color: white;
+}

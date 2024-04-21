@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import './NavMenu.css';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, NavItem, NavLink } from 'reactstrap';
+import logo from '../resources/logo.svg'
+import './NavMenu.css'; 
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
@@ -15,7 +16,7 @@ export class NavMenu extends Component {
     };
   }
 
-  toggleNavbar () {
+  toggleNavbar() {
     this.setState({
       collapsed: !this.state.collapsed
     });
@@ -23,20 +24,22 @@ export class NavMenu extends Component {
 
   render() {
     return (
-      <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
-          <NavbarBrand tag={Link} to="/">EventBridge.Web</NavbarBrand>
+      <header className="header-style">
+        <Navbar dark expand="md" className="navbar-dark border-bottom box-shadow mb-3">
+          <NavbarBrand tag={Link} to="/">
+            <img src={logo} alt="Nullam" style={{ height: 50 }} />
+          </NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-          <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-            <ul className="navbar-nav flex-grow">
+          <Collapse isOpen={!this.state.collapsed} navbar>
+            <ul className="navbar-nav ml-auto">
               <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+                <NavLink tag={Link} to="/" className="text-light">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/create-event">Add event</NavLink>
+                <NavLink tag={Link} to="/create-event" className="text-light">Add event</NavLink>
               </NavItem>
               <NavItem>
-                <a className="nav-link text-dark" href="/Identity/Account/Manage">Account</a>
+                <NavLink tag={Link} to="/identity/account/manage" className="text-light">Account</NavLink>
               </NavItem>
             </ul>
           </Collapse>

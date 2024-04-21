@@ -1,18 +1,20 @@
-﻿a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+﻿/* NavMenu.css */
+.navbar-dark {
+    background-color: white;
 }
 
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+.navbar-nav .nav-link {
+    color: black !important;
+    
 }
 
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+.navbar-nav .nav-link:hover {
+    background-color: #0056b3;
+    border-radius: 5px;
+    color: white !important;
 }
+
+.header-style{
+    padding: 10px;
+}
+
