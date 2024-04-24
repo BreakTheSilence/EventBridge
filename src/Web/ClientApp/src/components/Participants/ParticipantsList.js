@@ -23,23 +23,27 @@ function ParticipantsList({participants, eventId}) {
   }
   const renderList = (participantsList) => {
     return (
-      <div className="participants-container">
-        <h2>Participants:</h2>
-        <ol>
-          {participantsList.map((participant, index) => (
-            <li key={participant.id}>
-              <span>{index + 1}. </span>
-              <span>
+      <div className="participants-list">
+        <div className="participants-container">
+          <h2>Participants:</h2>
+          <div>
+            <ol>
+              {participantsList.map((participant, index) => (
+                <li key={participant.id}>
+                  <span>{index + 1}. </span>
+                  <span>
           {participant.type === 0 ? `${participant.firstName} ${participant.lastName}` : participant.name}
         </span>
-              <span className="id-code">{participant.idCode}</span>
-              <Button style={{marginRight: 10}} variant="contained" color="warning"
-                      onClick={() => handleEdit(participant.id, eventId)}>Edit</Button>
-              <Button variant="outlined" color="error"
-                      onClick={() => handleDelete(participant.id, eventId)}>Delete</Button>
-            </li>
-          ))}
-        </ol>
+                  <span className="id-code">{participant.idCode}</span>
+                  <Button style={{marginRight: 10}} variant="contained" color="warning"
+                          onClick={() => handleEdit(participant.id, eventId)}>Edit</Button>
+                  <Button variant="outlined" color="error"
+                          onClick={() => handleDelete(participant.id, eventId)}>Delete</Button>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
       </div>
     );
   }

@@ -4,6 +4,7 @@ import {EventsClient} from '../../web-api-client.ts';
 import ParticipantsList from '../Participants/ParticipantsList';
 import NewParticipantForm from '../EventParticipants/NewParticipantForm';
 import '../../custom.css'
+import TitleHeader from "../TitleHeader";
 
 function EventDetails() {
   const {eventId} = useParams();
@@ -38,15 +39,17 @@ function EventDetails() {
 
   return (
     <div className="event-details-container">
-      <h1>Event Details</h1>
+      <TitleHeader pageTitle={"Event Details"}/>
       {event ? (
         <div>
           <h2>{event.name}</h2>
           <p>Date: {new Date(event.date).toLocaleDateString()}</p>
           <p>Location: {event.location}</p>
           <p style={{marginBottom: 50}}>Description: {event.description}</p>
-          <ParticipantsList participants={event.eventParticipants} eventId={event.id}/>
-          <NewParticipantForm style={{marginTop: 50}} eventId={event.id}/>
+          <div className="event-details-participants">
+            <ParticipantsList participants={event.eventParticipants} eventId={event.id}/>
+            <NewParticipantForm style={{marginTop: 50}} eventId={event.id}/>
+          </div>
         </div>
       ) : (
         <p>Event not found</p>

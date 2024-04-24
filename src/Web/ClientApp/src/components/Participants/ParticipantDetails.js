@@ -1,11 +1,12 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {EventParticipantsClient} from "../../web-api-client.ts";
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import EditParticipantDetails from "./EditParticipantDetails";
 import EditParticipationDetails from "../EventParticipants/EditParticipationDetails";
+import TitleHeader from "../TitleHeader";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,7 +41,6 @@ function ParticipantDetails() {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -72,7 +72,8 @@ function ParticipantDetails() {
   }
 
   return (
-    <div>
+    <div className="event-details-container">
+      <TitleHeader pageTitle={"Details"}/>
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">

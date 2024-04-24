@@ -62,7 +62,7 @@ function EditParticipationDetails({eventParticipantDto: EventParticipantDto}) {
           Data is updated successfully.
         </Alert>
       )}
-      <h2 style={{marginBottom: 30}}>Participation details</h2>
+      <h2 style={{marginBottom: 30}}>Participation Details</h2>
       <label style={{marginBottom: 30}}>
         Payment method:
         <select

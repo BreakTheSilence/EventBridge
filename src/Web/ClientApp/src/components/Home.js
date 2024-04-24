@@ -33,7 +33,6 @@ function Home() {
   const renderEventsTable = (events, includeDelete = true) => (
     <div>
       <div>
-
       </div>
       <table className="table table-striped" aria-labelledby="tableLabel">
         <thead>
