@@ -1,12 +1,16 @@
-﻿import React, {useState} from 'react';
-import {AddEventCommand, EventsClient} from '../../web-api-client.ts';
-import {useNavigate} from 'react-router-dom';
+﻿import React, { useState } from 'react';
+import { AddEventCommand, EventsClient } from '../../web-api-client.ts';
+import { useNavigate } from 'react-router-dom';
 import './EventForm.css';
 import Button from '@mui/material/Button';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { TextField } from '@mui/material';
+import dayjs from 'dayjs';
 
 function EventForm() {
   const [name, setName] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(dayjs());
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const navigate = useNavigate();
@@ -17,7 +21,7 @@ function EventForm() {
 
     const newEvent: AddEventCommand = {
       name: name,
-      date: date,
+      date: date ? date.format() : null, // Format date or handle null if no date is selected
       location: location,
       description: description
     };
@@ -30,7 +34,7 @@ function EventForm() {
     <div className="form-container">
       <form onSubmit={handleSubmit} className="event-form">
         <div className="form-group">
-          <label>Ürituse nimi:</label>
+          <label>Event Name:</label>
           <input
             type="text"
             value={name}
@@ -39,17 +43,18 @@ function EventForm() {
           />
         </div>
         <div className="form-group">
-          <label>Toimumisaeg:</label>
-          <input
-            type="text"
-            placeholder="pp.kk.aaaa hh:mm"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
+          <label>Event Date:</label>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              renderInput={(props) => <TextField {...props} />}
+              value={date}
+              onChange={setDate}
+              required
+            />
+          </LocalizationProvider>
         </div>
         <div className="form-group">
-          <label>Koht:</label>
+          <label>Location:</label>
           <input
             type="text"
             value={location}
@@ -57,15 +62,15 @@ function EventForm() {
           />
         </div>
         <div className="form-group">
-          <label>Lisainfo:</label>
+          <label>Additional Information:</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <div className="form-actions">
-          <Button variant="outlined" type="button" onClick={() => navigate(-1)}>Tagasi</Button>
-          <Button variant="contained" type="submit">Lisa</Button>
+          <Button variant="outlined" type="button" onClick={() => navigate(-1)}>Back</Button>
+          <Button variant="contained" type="submit">Add Event</Button>
         </div>
       </form>
     </div>
